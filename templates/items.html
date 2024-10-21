@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sisonke</title>
+    <title>SecureLifeCover - My Policies</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -16,14 +16,15 @@
                             <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                            <span class="ml-2 text-xl font-bold text-gray-900">MicroInsure</span>
+                            <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="{{ url_for('main.dashboard') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
-                        <a href="{{ url_for('main.items') }}" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
-                        <a href="{{ url_for('main.claims') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
-                        <a href="{{ url_for('main.insurance_pools') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Insurance Pools</a>
+                        <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
+                        <a href="/claims" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
+                        <a href="/payments" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
+                        <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
                         <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -41,6 +42,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="-mr-2 flex items-center sm:hidden">
+                        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm:hidden" id="mobile-menu">
+                <div class="pt-2 pb-3 space-y-1">
+                    <a href="{{ url_for('main.dashboard') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                    <a href="{{ url_for('main.items') }}" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">My Policies</a>
+                    <a href="{{ url_for('main.claims') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Claims</a>
+                    <a href="{{ url_for('main.insurance_pools') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Insurance Pools</a>
                 </div>
             </div>
         </nav>
@@ -48,7 +69,7 @@
         <div class="py-10">
             <header>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-3xl font-bold leading-tight text-gray-900">My Policies</h1>
+                    <h1 class="text-3xl font-bold leading-tight text-gray-900">My Funeral Cover Policies</h1>
                 </div>
             </header>
             <main>
@@ -65,12 +86,13 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Construction Worker</dt>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Family Funeral Cover</dt>
                                                 <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R15,000/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Insured</div>
+                                                    <div class="text-2xl font-semibold text-gray-900">R500/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
                                                 </dd>
                                             </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: John Doe</p>
                                         </div>
                                     </div>
                                 </div>
@@ -91,12 +113,13 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Retail Assistant</dt>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Extended Family Cover</dt>
                                                 <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R8,000/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Insured</div>
+                                                    <div class="text-2xl font-semibold text-gray-900">R300/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-yellow-600">Due</div>
                                                 </dd>
                                             </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: Jane Smith</p>
                                         </div>
                                     </div>
                                 </div>
@@ -117,12 +140,94 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Domestic Worker</dt>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Individual Cover</dt>
                                                 <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R5,000/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Insured</div>
+                                                    <div class="text-2xl font-semibold text-gray-900">R200/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-red-600">Late</div>
                                                 </dd>
                                             </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: Mike Johnson</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-5 py-3">
+                                    <div class="text-sm">
+                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="p-5">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"   stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Family Plus Cover</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-2xl font-semibold text-gray-900">R750/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
+                                                </dd>
+                                            </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: Sarah Williams</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-5 py-3">
+                                    <div class="text-sm">
+                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="p-5">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Senior Care Cover</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-2xl font-semibold text-gray-900">R400/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-yellow-600">Due</div>
+                                                </dd>
+                                            </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: Robert Brown</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-5 py-3">
+                                    <div class="text-sm">
+                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="p-5">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Child Education Cover</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-2xl font-semibold text-gray-900">R350/month</div>
+                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
+                                                </dd>
+                                            </dl>
+                                            <p class="text-sm text-gray-500">Policy Holder: Emily Davis</p>
                                         </div>
                                     </div>
                                 </div>
@@ -136,50 +241,46 @@
 
                         <div class="mt-12 bg-white shadow sm:rounded-lg">
                             <div class="px-4 py-5 sm:p-6">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Policy</h3>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Funeral Cover Policy</h3>
                                 <div class="mt-5">
                                     <form action="/add_policy" method="POST" enctype="multipart/form-data">
                                         <div class="grid grid-cols-6 gap-6">
-                                            <div class="col-span-6 sm:col-span-3">
-                                                <label for="job_name" class="block text-sm font-medium text-gray-700">Job Name</label>
-                                                <input type="text" name="job_name" id="job_name" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                            </div>
-
-                                            <div class="col-span-6 sm:col-span-3">
-                                                <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
-                                                <input type="text" name="company" id="company" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                            </div>
-
-                                            <div class="col-span-6 sm:col-span-3">
-                                                <label for="employee_number" class="block text-sm font-medium text-gray-700">Employer Number</label>
-                                                <input type="text" name="employer_number" id="employer_number" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                            </div>
-
-                                            <div class="col-span-6 sm:col-span-3">
-                                                <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                                                <input type="tel" name="phone_number" id="phone_number" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                            </div>
-
-                                            <div class="col-span-6 sm:col-span-3">
-                                                <label for="industry" class="block text-sm font-medium text-gray-700">Industry</label>
-                                                <select id="industry" name="industry" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                    <option value="">Select an industry</option>
-                                                    <option value="construction">Construction</option>
-                                                    <option value="retail">Retail</option>
-                                                    <option value="agriculture">Agriculture</option>
-                                                    <option value="domestic_work">Domestic Work</option>
-                                                    <option value="security">Security</option>
+                                            <div class="col-span-6  sm:col-span-3">
+                                                <label for="policy_type" class="block text-sm font-medium text-gray-700">Policy Type</label>
+                                                <select id="policy_type" name="policy_type" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                    <option value="">Select a policy type</option>
+                                                    <option value="family">Family Funeral Cover</option>
+                                                    <option value="extended">Extended Family Cover</option>
+                                                    <option value="individual">Individual Cover</option>
+                                                    <option value="family_plus">Family Plus Cover</option>
+                                                    <option value="senior_care">Senior Care Cover</option>
+                                                    <option value="child_education">Child Education Cover</option>
                                                 </select>
                                             </div>
 
-                                            <div class="col-span-6">
-                                                <label for="current_income" class="block text-sm font-medium text-gray-700">Current Income</label>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="cover_amount" class="block text-sm font-medium text-gray-700">Cover Amount</label>
                                                 <div class="mt-1 relative rounded-md shadow-sm">
                                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                         <span class="text-gray-500 sm:text-sm">R</span>
                                                     </div>
-                                                    <input type="number" name="current_income" id="current_income" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" step="0.01" min="0">
+                                                    <input type="number" name="cover_amount" id="cover_amount" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" step="1000" min="5000">
                                                 </div>
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="premium" class="block text-sm font-medium text-gray-700">Monthly Premium</label>
+                                                <div class="mt-1 relative rounded-md shadow-sm">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 sm:text-sm">R</span>
+                                                    </div>
+                                                    <input type="number" name="premium" id="premium" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" step="0.01" min="0">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="beneficiaries" class="block text-sm font-medium text-gray-700">Number of Beneficiaries</label>
+                                                <input type="number" name="beneficiaries" id="beneficiaries" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" min="1">
                                             </div>
                                         </div>
                                         <div class="mt-5">
@@ -191,10 +292,106 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- New section: Payment History -->
+                        <div class="mt-12 bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Payment History</h3>
+                                <div class="mt-5">
+                                    <div class="flex flex-col">
+                                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                                    <table class="min-w-full divide-y divide-gray-200">
+                                                        <thead class="bg-gray-50">
+                                                            <tr>
+                                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                    Date
+                                                                </th>
+                                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                    Policy
+                                                                </th>
+                                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                    Amount
+                                                                </th>
+                                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                    Status
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="bg-white divide-y divide-gray-200">
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    2023-05-01
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                    Family Funeral Cover
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    R500
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                                        Paid
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    2023-04-01
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                    Extended Family Cover
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    R300
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                                        Paid
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    2023-03-01
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                    Individual Cover
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    R200
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                        Late
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
+        const mobileMenu = document.getElementByI('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+            mobileMenuButton.setAttribute('aria-expanded', !expanded);
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sisonke</title>
+    <title>Dashboard - SecureLifeCover</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="min-h-screen bg-gray-100">
@@ -16,21 +17,20 @@
                             <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                            <span class="ml-2 text-xl font-bold text-gray-900">Sisonke</span>
+                            <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/dashboard" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
                         <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
                         <a href="/claims" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
-                        <a href="/insurance-pools" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Insurance Pools</a>
+                        <a href="/payments" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
+                        <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
                         <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <span class="sr-only">View notifications</span>
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
+                            <i data-lucide="bell" class="h-6 w-6"></i>
                         </button>
                         <div class="ml-3 relative">
                             <div>
@@ -41,6 +41,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="-mr-2 flex items-center sm:hidden">
+                        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                            <span class="sr-only">Open main menu</span>
+                            <i data-lucide="menu" class="block h-6 w-6" id="menu-icon"></i>
+                            <i data-lucide="x" class="hidden h-6 w-6" id="close-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm:hidden hidden" id="mobile-menu">
+                <div class="pt-2 pb-3 space-y-1">
+                    <a href="/dashboard" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                    <a href="/payments" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Payments</a>
+                    <a href="/family-members" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Family Members</a>
+                    <a href="/support" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Support</a>
                 </div>
             </div>
         </nav>
@@ -55,83 +71,17 @@
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="px-4 py-8 sm:px-0">
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            <!-- Insured Policies Card -->
+                            <!-- Active Policies Card -->
                             <div class="bg-white overflow-hidden shadow rounded-lg">
                                 <div class="p-5">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                                            </svg>
+                                            <i data-lucide="shield" class="h-6 w-6 text-white"></i>
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
                                                 <dt class="text-sm font-medium text-gray-500 truncate">
-                                                    Insured Policies
-                                                </dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">
-                                                        5
-                                                    </div>
-                                                </dd>
-                                            </dl>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="/items" class="font-medium text-indigo-600 hover:text-indigo-500">
-                                            View all
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Active Claims Card -->
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">
-                                                    Active Claims
-                                                </dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">
-                                                        2
-                                                    </div>
-                                                </dd>
-                                            </dl>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="/claims" class="font-medium text-indigo-600 hover:text-indigo-500">
-                                            View all
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Insurance Pools Card -->
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">
-                                                    Insurance Pools
+                                                    Active Policies
                                                 </dt>
                                                 <dd class="flex items-baseline">
                                                     <div class="text-2xl font-semibold text-gray-900">
@@ -144,8 +94,68 @@
                                 </div>
                                 <div class="bg-gray-50 px-5 py-3">
                                     <div class="text-sm">
-                                        <a href="/insurance-pools" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                        <a href="/policies" class="font-medium text-indigo-600 hover:text-indigo-500">
                                             View all
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Payment Card -->
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="p-5">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <i data-lucide="calendar" class="h-6 w-6 text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                                    Next Payment Due
+                                                </dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-2xl font-semibold text-gray-900">
+                                                        May 15, 2023
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-5 py-3">
+                                    <div class="text-sm">
+                                        <a href="/payments" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                            Manage payments
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Family Members Card -->
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="p-5">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <i data-lucide="users" class="h-6 w-6 text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                                    Family Members
+                                                </dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-2xl font-semibold text-gray-900">
+                                                        5
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-5 py-3">
+                                    <div class="text-sm">
+                                        <a href="/family-members" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                            Manage family
                                         </a>
                                     </div>
                                 </div>
@@ -162,26 +172,25 @@
                                             <div class="px-4 py-4 sm:px-6">
                                                 <div class="flex items-center justify-between">
                                                     <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        New claim submitted
+                                                        Payment received
                                                     </p>
                                                     <div class="ml-2 flex-shrink-0 flex">
                                                         <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                            Claim
+                                                            Payment
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 sm:flex sm:justify-between">
                                                     <div class="sm:flex">
                                                         <p class="flex items-center text-sm text-gray-500">
-                                                            Retrenchment
+                                                            <i data-lucide="check-circle" class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"></i>
+                                                            Successful
                                                         </p>
                                                     </div>
                                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
+                                                        <i data-lucide="calendar" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"></i>
                                                         <p>
-                                                            Submitted on <time datetime="2020-01-07">January 7, 2020</time>
+                                                            May 1, 2023
                                                         </p>
                                                     </div>
                                                 </div>
@@ -193,26 +202,26 @@
                                             <div class="px-4 py-4 sm:px-6">
                                                 <div class="flex items-center justify-between">
                                                     <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        Joined new insurance pool
+                                                        Policy updated
                                                     </p>
                                                     <div class="ml-2 flex-shrink-0 flex">
                                                         <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                            Pool
+                                                            Update
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 sm:flex sm:justify-between">
                                                     <div class="sm:flex">
                                                         <p class="flex items-center text-sm text-gray-500">
-                                                            ABC Trading Pool
+                                                            <i data-lucide="file-text" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"></i>
+                                                            Coverage increased
                                                         </p>
                                                     </div>
                                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
+                                                        <i data-lucide="calendar" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"></i>
                                                         <p>
-                                                            Joined on <time datetime="2020-01-07">January 5, 2020</time>
+
+                                                            April 28, 2023
                                                         </p>
                                                     </div>
                                                 </div>
@@ -227,5 +236,22 @@
             </main>
         </div>
     </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
