@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claims - SecureLifeCover</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body>
+<body x-data="{
+    showClaimDetails: false,
+    selectedClaim: null,
+    claims: [
+        { id: 'FCC12345', type: 'Family Member Funeral', status: 'In Progress', submittedDate: '2023-05-07', policyHolder: 'John Doe', amount: 'R10,000', description: 'Claim for funeral expenses' },
+        { id: 'FCC12346', type: 'Extended Family Funeral', status: 'Under Review', submittedDate: '2023-05-15', policyHolder: 'Jane Smith', amount: 'R8,000', description: 'Claim for extended family member funeral' },
+        { id: 'FCC12340', type: 'Individual Funeral', status: 'Approved', submittedDate: '2023-04-15', policyHolder: 'Mike Johnson', amount: 'R5,000', description: 'Approved claim for individual funeral cover' },
+        { id: 'FCC12339', type: 'Family Funeral', status: 'Denied', submittedDate: '2023-03-30', policyHolder: 'Sarah Williams', amount: 'R12,000', description: 'Claim denied due to policy expiration' }
+    ],
+    showSubmissionAnimation: false,
+    familyMembers: ['John Doe', 'Jane Doe', 'Child 1', 'Child 2'],
+    funeralCoverPolicies: ['Family Funeral Cover', 'Extended Family Cover', 'Individual Cover']
+}">
     <div class="min-h-screen bg-gray-100">
         <nav class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +35,7 @@
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                         <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
                         <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
-                        <a href="/claims" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
+                        <a href="/claims" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
                         <a href="/payments" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
                         <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
                     </div>
@@ -82,21 +95,35 @@
                                     Submit a New Funeral Cover Claim
                                 </h3>
                                 <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                    Please select a policy to submit a funeral cover claim.
+                                    Please fill out the form to submit a new funeral cover claim.
                                 </p>
                             </div>
                             <div class="border-t border-gray-200">
-                                <form action="#" method="POST" class="space-y-6 px-4 py-5 sm:p-6">
-                                    <div class="sm:col-span-3">
-                                        <label for="policy" class="block text-sm font-medium text-gray-700">
-                                            Select Funeral Cover Policy
-                                        </label>
-                                        <div class="mt-1">
-                                            <select id="policy" name="policy" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option>Family Funeral Cover</option>
-                                                <option>Extended Family Cover</option>
-                                                <option>Individual Cover</option>
+                                <form @submit.prevent="submitClaim" class="space-y-6 px-4 py-5 sm:p-6">
+                                    <div class="grid grid-cols-6 gap-6">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="family-member" class="block text-sm font-medium text-gray-700">Family Member</label>
+                                            <select id="family-member" name="family-member" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                <option value="">Select a family member</option>
+                                                <template x-for="member in familyMembers" :key="member">
+                                                    <option x-text="member"></option>
+                                                </template>
                                             </select>
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="funeral-cover" class="block text-sm font-medium text-gray-700">Funeral Cover Policy</label>
+                                            <select id="funeral-cover" name="funeral-cover" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                <option value="">Select a policy</option>
+                                                <template x-for="policy in funeralCoverPolicies" :key="policy">
+                                                    <option x-text="policy"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-span-6">
+                                            <label for="file-upload" class="block text-sm font-medium text-gray-700">Upload Document</label>
+                                            <input id="file-upload" name="file-upload" type="file" accept="image/*,.pdf" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         </div>
                                     </div>
                                     <div class="flex justify-end">
@@ -112,69 +139,34 @@
                             <h2 class="text-lg leading-6 font-medium text-gray-900">Current Funeral Cover Claims</h2>
                             <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
                                 <ul role="list" class="divide-y divide-gray-200">
-                                    <li>
-                                        <a href="#" class="block hover:bg-gray-50">
-                                            <div class="px-4 py-4 sm:px-6">
-                                                <div class="flex items-center justify-between">
-                                                    <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        Family Member Funeral
-                                                    </p>
-                                                    <div class="ml-2 flex-shrink-0 flex">
-                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                            In Progress
-                                                        </p>
+                                    <template x-for="claim in claims.filter(c => c.status === 'In Progress' || c.status === 'Under Review')" :key="claim.id">
+                                        <li>
+                                            <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
+                                                <div class="px-4 py-4 sm:px-6">
+                                                    <div class="flex items-center justify-between">
+                                                        <p class="text-sm font-medium text-indigo-600 truncate"   x-text="claim.type"></p>
+                                                        <div class="ml-2 flex-shrink-0 flex">
+                                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
+                                                                'bg-green-100 text-green-800': claim.status === 'In Progress',
+                                                                'bg-yellow-100 text-yellow-800': claim.status === 'Under Review'
+                                                            }" x-text="claim.status"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 sm:flex sm:justify-between">
+                                                        <div class="sm:flex">
+                                                            <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                                            </svg>
+                                                            <p x-text="'Submitted on ' + claim.submittedDate"></p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                    <div class="sm:flex">
-                                                        <p class="flex items-center text-sm text-gray-500">
-                                                            Claim #FCC12345
-                                                        </p>
-                                                    </div>
-                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
-                                                        <p>
-                                                            Submitted on <time datetime="2023-05-07">May 7, 2023</time>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block hover:bg-gray-50">
-                                            <div class="px-4 py-4 sm:px-6">
-                                                <div class="flex items-center justify-between">
-                                                    <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        Extended Family Funeral
-                                                    </p>
-                                                    <div class="ml-2 flex-shrink-0 flex">
-                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                            Under Review
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                    <div class="sm:flex">
-                                                        <p class="flex items-center text-sm text-gray-500">
-                                                            Claim #FCC12346
-                                                        </p>
-                                                    </div>
-                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
-                                                        <p>
-                                                            Submitted on <time datetime="2023-05-15">May 15, 2023</time>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
+                                    </template>
                                 </ul>
                             </div>
                         </div>
@@ -183,68 +175,34 @@
                             <h2 class="text-lg leading-6 font-medium text-gray-900">Past Funeral Cover Claims</h2>
                             <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
                                 <ul role="list" class="divide-y divide-gray-200">
-                                    <li>
-                                        <a href="#" class="block hover:bg-gray-50">
-                                            <div class="px-4 py-4 sm:px-6">
-                                                <div class="flex items-center justify-between">
-                                                    <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        Individual Funeral
-                                                    </p>
-                                                    <div class="ml-2 flex-shrink-0 flex">
-                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                            Approved
-                                                        </p>
+                                    <template x-for="claim in claims.filter(c => c.status === 'Approved' || c.status === 'Denied')" :key="claim.id">
+                                        <li>
+                                            <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
+                                                <div class="px-4 py-4 sm:px-6">
+                                                    <div class="flex items-center justify-between">
+                                                        <p class="text-sm font-medium text-indigo-600 truncate" x-text="claim.type"></p>
+                                                        <div class="ml-2 flex-shrink-0 flex">
+                                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
+                                                                'bg-green-100 text-green-800': claim.status === 'Approved',
+                                                                'bg-red-100 text-red-800': claim.status === 'Denied'
+                                                            }" x-text="claim.status"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 sm:flex sm:justify-between">
+                                                        <div class="sm:flex">
+                                                            <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
+                                                        </div>
+                                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                                            </svg>
+                                                            <p x-text="'Closed on ' + claim.submittedDate"></p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                    <div class="sm:flex">
-                                                        <p class="flex items-center text-sm text-gray-500">
-                                                            Claim #FCC12340
-                                                        </p>
-                                                    </div>
-                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2  2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
-                                                        <p>
-                                                            Closed on <time datetime="2023-04-15">April 15, 2023</time>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block hover:bg-gray-50">
-                                            <div class="px-4 py-4 sm:px-6">
-                                                <div class="flex items-center justify-between">
-                                                    <p class="text-sm font-medium text-indigo-600 truncate">
-                                                        Family Funeral
-                                                    </p>
-                                                    <div class="ml-2 flex-shrink-0 flex">
-                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                            Denied
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                    <div class="sm:flex">
-                                                        <p class="flex items-center text-sm text-gray-500">
-                                                            Claim #FCC12339
-                                                        </p>
-                                                    </div>
-                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                        </svg>
-                                                        <p>
-                                                            Closed on <time datetime="2023-03-30">March 30, 2023</time>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
+                                    </template>
                                 </ul>
                             </div>
                         </div>
@@ -253,6 +211,54 @@
             </main>
         </div>
     </div>
+
+    <!-- Claim Details Popup -->
+    <div x-show="showClaimDetails" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center" x-cloak>
+        <div class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" x-text="selectedClaim?.type + ' Details'"></h3>
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Claim ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-text="selectedClaim?.id"></dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Policy Holder</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-text="selectedClaim?.policyHolder"></dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Status</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-text="selectedClaim?.status"></dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Amount</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-text="selectedClaim?.amount"></dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Description</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-text="selectedClaim?.description"></dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button @click="showClaimDetails = false" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submission Animation -->
+    <div x-show="showSubmissionAnimation" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center" x-cloak>
+        <div class="bg-white rounded-lg p-6 text-center">
+            <svg class="animate-spin h-10 w-10 text-indigo-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-lg font-semibold">Submitting your claim...</p>
+        </div>
+    </div>
+
     <script>
         // Mobile menu toggle
         const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
@@ -263,6 +269,25 @@
             mobileMenuButton.setAttribute('aria-expanded', !expanded);
             mobileMenu.classList.toggle('hidden');
         });
+
+        // Claim submission function
+        function submitClaim() {
+            this.showSubmissionAnimation = true;
+            setTimeout(() => {
+                this.showSubmissionAnimation = false;
+                const newClaim = {
+                    id: 'FCC' + Math.floor(Math.random() * 10000),
+                    type: document.getElementById('funeral-cover').value,
+                    status: 'In Progress',
+                    submittedDate: new Date().toISOString().split('T')[0],
+                    policyHolder: document.getElementById('family-member').value,
+                    amount: 'R' + (Math.floor(Math.random() * 10) + 5) + ',000',
+                    description: 'New claim submitted'
+                };
+                this.claims.unshift(newClaim);
+                document.querySelector('form').reset();
+            }, 2000);
+        }
     </script>
 </body>
 </html>

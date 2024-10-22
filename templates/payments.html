@@ -6,6 +6,7 @@
     <title>Payments - SecureLifeCover</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         @keyframes successAnimation {
             0% { transform: scale(0); opacity: 0; }
@@ -17,62 +18,94 @@
         }
     </style>
 </head>
-<body>
+<body x-data="{
+    walletBalance: 1000,
+    showTopUpModal: false,
+    showWithdrawModal: false,
+    topUpAmount: '',
+    withdrawAmount: '',
+    selectedPaymentMethod: '',
+    showProcessingAnimation: false,
+    paymentMethods: [
+        { id: 1, type: 'Bank Account', details: 'Ending in 1234', isDefault: true },
+        { id: 2, type: 'Credit Card', details: 'Ending in 5678', isDefault: false },
+        { id: 3, type: 'Nedbank MobiMoney', details: 'Ending in 9012', isDefault: false }
+    ],
+    showPaymentModal: false,
+    currentPaymentType: '',
+    submitPaymentForm() {
+        const form = document.getElementById('paymentForm');
+        const formData = new FormData(form);
+        const newMethod = {
+            id: Date.now(),
+            type: this.currentPaymentType,
+            details: Array.from(formData.entries()).map(([key, value]) => `${key}: ${value}`).join(', '),
+            isDefault: false
+        };
+        this.paymentMethods.push(newMethod);
+        this.showPaymentModal = false;
+        document.getElementById('successAnimation').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('successAnimation').classList.add('hidden');
+            lucide.createIcons(); // Reinitialize Lucide icons
+        }, 2000);
+    }
+}" x-effect="reinitializeLucideIcons()">
     <div class="min-h-screen bg-gray-100">
         <nav class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <div class="flex-shrink-0 flex items-center">
-                    <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
-                </div>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
-                <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
-                <a href="/claims" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
-                <a href="/payments" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
-                <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span class="sr-only">View notifications</span>
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                </button>
-                <div class="ml-3 relative">
-                    <div>
-                        <button type="button" class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                            <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
+                        </div>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
+                        <a href="/claims" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
+                        <a href="/payments" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
+                        <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                        <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span class="sr-only">View notifications</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                        </button>
+                        <div class="ml-3 relative">
+                            <div>
+                                <button type="button" class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                    <span class="sr-only">Open user menu</span>
+                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="-mr-2 flex items-center sm:hidden">
+                        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                            <span class="sr-only">Open main menu</span>
+                            <i data-lucide="menu" class="block h-6 w-6" id="menu-icon"></i>
+                            <i data-lucide="x" class="hidden h-6 w-6" id="close-icon"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
-                    <span class="sr-only">Open main menu</span>
-                    <i data-lucide="menu" class="block h-6 w-6" id="menu-icon"></i>
-                    <i data-lucide="x" class="hidden h-6 w-6" id="close-icon"></i>
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <div class="sm:hidden hidden" id="mobile-menu">
-        <div class="pt-2 pb-3 space-y-1">
-            <a href="/dashboard" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
-            <a href="/items" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">My Policies</a>
-            <a href="/claims" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Claims</a>
-            <a href="/payments" class="border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Payments</a>
-            <a href="/familymembers" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Family Members</a>
-        </div>
-    </div>
-</nav>
+            <div class="sm:hidden hidden" id="mobile-menu">
+                <div class="pt-2 pb-3 space-y-1">
+                    <a href="/dashboard" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                    <a href="/items" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">My Policies</a>
+                    <a href="/claims" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Claims</a>
+                    <a href="/payments" class="border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Payments</a>
+                    <a href="/familymembers" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Family Members</a>
+                </div>
+            </div>
+        </nav>
         <div class="py-10">
             <header>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,6 +115,33 @@
             <main>
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="px-4 py-8 sm:px-0">
+                        <!-- Wallet Section -->
+                        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+                            <div class="px-4 py-5 sm:px-6">
+                                <h2 class="text-lg leading-6 font-medium text-gray-900">Your Wallet</h2>
+                                <p class="mt-1 max-w-2xl text-sm text-gray-500">Manage your wallet balance and transactions.</p>
+                            </div>
+                            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                                <dl class="sm:divide-y sm:divide-gray-200">
+                                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <dt class="text-sm font-medium text-gray-500">Current Balance</dt>
+                                        <dd class="mt-1 text-3xl font-semibold text-gray-900 sm:mt-0 sm:col-span-2" x-text="'R' + walletBalance.toFixed(2)"></dd>
+                                    </div>
+                                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <dt class="text-sm font-medium text-gray-500">Actions</dt>
+                                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                            <button @click="showTopUpModal = true" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Top Up
+                                            </button>
+                                            <button @click="showWithdrawModal = true" class="ml-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Withdraw
+                                            </button>
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+
                         <!-- Existing Payment Methods -->
                         <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
                             <div class="px-4 py-5 sm:px-6">
@@ -90,34 +150,37 @@
                             </div>
                             <div class="border-t border-gray-200">
                                 <ul role="list" class="divide-y divide-gray-200">
-                                    <li class="px-4 py-4 sm:px-6">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <div class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100">
-                                                    <i data-lucide="landmark" class="h-6 w-6 text-indigo-600"></i>
+                                    <template x-for="method in paymentMethods" :key="method.id">
+                                        <li class="px-4 py-4 sm:px-6">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center">
+                                                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100">
+                                                        <i :data-lucide="
+                                                            method.type === 'Bank Account' ? 'landmark' :
+                                                            method.type === 'Tata-iMali' ? 'wallet' :
+                                                            method.type === 'Retail Store Voucher' ? 'store' :
+                                                            method.type === 'Nedbank MobiMoney' ? 'smartphone' :
+                                                            method.type === 'Interledger Wallet' ? 'wallet' :
+                                                            method.type === 'Card' ? 'credit-card' :
+                                                            method.type === 'MTN MoMo Money' ? 'phone' :
+                                                            'credit-card'
+                                                        " class="h-6 w-6 text-indigo-600"></i>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-sm font-medium text-gray-900" x-text="method.type"></p>
+                                                        <p class="text-sm text-gray-500" x-text="method.details"></p>
+                                                    </div>
                                                 </div>
-                                                <div class="ml-3">
-                                                    <p class="text-sm font-medium text-gray-900">Bank Account (Default)</p>
-                                                    <p class="text-sm text-gray-500">Ending in 1234</p>
-                                                </div>
+                                                <button
+                                                    @click="paymentMethods = paymentMethods.map(m => ({...m, isDefault: m.id === method.id}))"
+                                                    :class="{'bg-indigo-100 text-indigo-700': method.isDefault, 'text-indigo-600 hover:text-indigo-900': !method.isDefault}"
+                                                    class="px-3 py-1 rounded-full text-sm font-semibold"
+                                                    x-text="method.isDefault ? 'Default' : 'Set as Default'"
+                                                ></button>
+
                                             </div>
-                                            <button class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-semibold">Default</button>
-                                        </div>
-                                    </li>
-                                    <li class="px-4 py-4 sm:px-6">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <div class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100">
-                                                    <i data-lucide="credit-card" class="h-6 w-6 text-indigo-600"></i>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <p class="text-sm font-medium text-gray-900">Credit Card</p>
-                                                    <p class="text-sm text-gray-500">Ending in 5678</p>
-                                                </div>
-                                            </div>
-                                            <button class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">Set as Default</button>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    </template>
                                 </ul>
                             </div>
                         </div>
@@ -128,40 +191,54 @@
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Payment Method</h3>
                                 <div class="mt-5">
                                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                        <button onclick="showPaymentForm('retail_store')" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Retail Store Voucher'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
                                                 <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
                                             </div>
                                             <i data-lucide="store" class="h-6 w-6 mr-2 text-gray-500"></i>
                                             Retail Store Voucher
                                         </button>
-                                        <button onclick="showPaymentForm('bank_account')" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Bank Account'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
                                                 <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
                                             </div>
                                             <i data-lucide="landmark" class="h-6 w-6 mr-2 text-gray-500"></i>
                                             Bank Account
                                         </button>
-                                        <button onclick="showPaymentForm('mobimoney')" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Nedbank MobiMoney'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
                                                 <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
                                             </div>
                                             <i data-lucide="smartphone" class="h-6 w-6 mr-2 text-gray-500"></i>
                                             Nedbank MobiMoney
                                         </button>
-                                        <button onclick="showPaymentForm('interledger')" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Interledger Wallet'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
                                                 <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
                                             </div>
                                             <i data-lucide="wallet" class="h-6 w-6 mr-2 text-gray-500"></i>
                                             Interledger Wallet
                                         </button>
-                                        <button onclick="showPaymentForm('card')" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Card'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
                                                 <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
                                             </div>
                                             <i data-lucide="credit-card" class="h-6 w-6 mr-2 text-gray-500"></i>
                                             Card
+                                        </button>
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'Tata-iMali'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
+                                                <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+                                            </div>
+                                            <i data-lucide="wallet" class="h-6 w-6 mr-2 text-gray-500"></i>
+                                            Tata-iMali
+                                        </button>
+                                        <button @click="showPaymentModal = true; currentPaymentType = 'MTN MoMo Money'" class="flex items-center justify-start px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <div class="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full mr-3">
+                                                <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+                                            </div>
+                                            <i data-lucide="phone" class="h-6 w-6 mr-2 text-gray-500"></i>
+                                            MTN MoMo Money
                                         </button>
                                     </div>
                                 </div>
@@ -169,20 +246,77 @@
                         </div>
 
                         <!-- Payment Method Modal (Initially Hidden) -->
-                        <div id="paymentModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
+                        <div x-show="showPaymentModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
                             <div class="bg-white rounded-lg p-8 max-w-md w-full">
-                                <h3 id="paymentFormTitle" class="text-lg leading-6 font-medium text-gray-900 mb-4"></h3>
-                                <form id="paymentForm" class="space-y-6" onsubmit="submitPaymentForm(event)">
-                                    <!-- Form fields will be dynamically inserted here -->
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" x-text="'Add ' + currentPaymentType"></h3>
+                                <form id="paymentForm" class="space-y-6" @submit.prevent="submitPaymentForm">
+                                    <template x-if="currentPaymentType === 'Retail Store Voucher'">
+                                        <div>
+                                            <label for="voucherCode" class="block text-sm font-medium text-gray-700">Voucher Code</label>
+                                            <input type="text" name="voucherCode" id="voucherCode" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'Bank Account'">
+                                        <div>
+                                            <div>
+                                                <label for="accountNumber" class="block text-sm font-medium text-gray-700">Account Number</label>
+                                                <input type="text" name="accountNumber" id="accountNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="mt-4">
+                                                <label for="routingNumber" class="block text-sm font-medium text-gray-700">Routing Number</label>
+                                                <input type="text" name="routingNumber" id="routingNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'Nedbank MobiMoney'">
+                                        <div>
+                                            <label for="mobimoneyNumber" class="block text-sm font-medium text-gray-700">MobiMoney Number</label>
+                                            <input type="text" name="mobimoneyNumber" id="mobimoneyNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'Interledger Wallet'">
+                                        <div>
+                                            <label for="walletAddress" class="block text-sm font-medium text-gray-700">Wallet Address</label>
+                                            <input type="text" name="walletAddress" id="walletAddress" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'Card'">
+                                        <div>
+                                            <div>
+                                                <label for="cardNumber" class="block text-sm font-medium text-gray-700">Card Number</label>
+                                                <input type="text" name="cardNumber" id="cardNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="mt-4">
+                                                <label for="expiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                                                <input type="text" name="expiryDate" id="expiryDate" placeholder="MM/YY" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="mt-4">
+                                                <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+                                                <input type="text" name="cvv" id="cvv" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'Tata-iMali'">
+                                        <div>
+                                            <label for="tataImaliNumber" class="block text-sm font-medium text-gray-700">Tata-iMali Number</label>
+                                            <input type="text" name="tataImaliNumber" id="tataImaliNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </template>
+                                    <template x-if="currentPaymentType === 'MTN MoMo Money'">
+                                        <div>
+                                            <label for="momoNumber" class="block text-sm font-medium text-gray-700">MoMo Number</label>
+                                            <input type="text" name="momoNumber" id="momoNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </template>
+                                    <div class="mt-5 sm:mt-6 flex justify-between">
+                                        <button @click="showPaymentModal = false" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:text-sm sm:w-auto sm:text-sm">
+                                            Close
+                                        </button>
+                                        <button type="submit" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm sm:w-auto sm:text-sm">
+                                            Add Payment Method
+                                        </button>
+                                    </div>
                                 </form>
-                                <div class="mt-5 sm:mt-6 flex justify-between">
-                                    <button type="button" onclick="closePaymentModal()" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:text-sm sm:w-auto sm:text-sm">
-                                        Close
-                                    </button>
-                                    <button type="submit" form="paymentForm" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm sm:w-auto sm:text-sm">
-                                        Add Payment Method
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
@@ -195,6 +329,70 @@
                                 <p class="text-xl font-semibold text-gray-900 mt-4">Payment Method Added Successfully!</p>
                             </div>
                         </div>
+
+                        <!-- Top Up Modal -->
+                        <div x-show="showTopUpModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+                            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Top Up Your Wallet</h3>
+                                <form @submit.prevent="showProcessingAnimation = true; setTimeout(() => { walletBalance += parseFloat(topUpAmount); showTopUpModal = false; showProcessingAnimation = false; topUpAmount = ''; }, 2000)">
+                                    <div class="mb-4">
+                                        <label for="topUpAmount" class="block text-sm font-medium text-gray-700">Amount</label>
+                                        <input type="number" name="topUpAmount" id="topUpAmount" x-model="topUpAmount" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="topUpPaymentMethod" class="block text-sm font-medium text-gray-700">Payment Method</label>
+                                        <select id="topUpPaymentMethod" x-model="selectedPaymentMethod" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <option value="">Select a payment method</option>
+                                            <template x-for="method in paymentMethods" :key="method.id">
+                                                <option :value="method.id" x-text="method.type + ' - ' + method.details"></option>
+                                            </template>
+                                            <option value="retailer_voucher">Retailer Voucher</option>
+                                            <option value="nedbank_atm_voucher">Nedbank ATM Voucher</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-5 sm:mt-6 flex justify-between">
+                                        <button @click="showTopUpModal = false" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm sm:w-auto sm:text-sm">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm sm:w-auto sm:text-sm">
+                                            Confirm Top Up
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Withdraw Modal -->
+                        <div x-show="showWithdrawModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+                            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Withdraw from Your Wallet</h3>
+                                <form @submit.prevent="if (parseFloat(withdrawAmount) <= walletBalance) { showProcessingAnimation = true; setTimeout(() => { walletBalance -= parseFloat(withdrawAmount); showWithdrawModal = false; showProcessingAnimation = false; withdrawAmount = ''; }, 2000); }">
+                                    <div class="mb-4">
+                                        <label for="withdrawAmount" class="block text-sm font-medium text-gray-700">Amount</label>
+                                        <input type="number" name="withdrawAmount" id="withdrawAmount" x-model="withdrawAmount" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="withdrawPaymentMethod" class="block text-sm font-medium text-gray-700">Payment Method</label>
+                                        <select id="withdrawPaymentMethod" x-model="selectedPaymentMethod" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <option value="">Select a payment method</option>
+                                            <template x-for="method in paymentMethods" :key="method.id">
+                                                <option :value="method.id" x-text="method.type + ' - ' + method.details"></option>
+                                            </template>
+                                            <option value="retailer_voucher">Retailer Voucher</option>
+                                            <option value="nedbank_atm_voucher">Nedbank ATM Voucher</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-5 sm:mt-6 flex justify-between">
+                                        <button @click="showWithdrawModal = false" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm sm:w-auto sm:text-sm">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm sm:w-auto sm:text-sm">
+                                            Confirm Withdraw
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -202,90 +400,6 @@
     </div>
 
     <script>
-        function showPaymentForm(type) {
-            const modal = document.getElementById('paymentModal');
-            const formTitle = document.getElementById('paymentFormTitle');
-            const form = document.getElementById('paymentForm');
-
-            modal.classList.remove('hidden');
-            form.innerHTML = ''; // Clear previous form fields
-
-            switch (type) {
-                case 'retail_store':
-                    formTitle.textContent = 'Add Retail Store Voucher';
-                    form.innerHTML = `
-                        <div>
-                            <label for="voucherCode" class="block text-sm font-medium text-gray-700">Voucher Code</label>
-                            <input type="text" name="voucherCode" id="voucherCode" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                    `;
-                    break;
-                case 'bank_account':
-                    formTitle.textContent = 'Add Bank Account';
-                    form.innerHTML = `
-                        <div>
-                            <label for="accountNumber" class="block text-sm font-medium text-gray-700">Account Number</label>
-                            <input type="text" name="accountNumber" id="accountNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                        <div>
-                            <label for="routingNumber" class="block text-sm font-medium text-gray-700">Routing Number</label>
-                            <input type="text" name="routingNumber" id="routingNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                    `;
-                    break;
-                case 'mobimoney':
-                    formTitle.textContent = 'Add Nedbank MobiMoney';
-                    form.innerHTML = `
-                        <div>
-                            <label for="mobimoneyNumber" class="block text-sm font-medium text-gray-700">MobiMoney Number</label>
-                            <input type="text" name="mobimoneyNumber" id="mobimoneyNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                    `;
-                    break;
-                case 'interledger':
-                    formTitle.textContent = 'Add Interledger Wallet';
-                    form.innerHTML = `
-                        <div>
-                            <label for="walletAddress" class="block text-sm font-medium text-gray-700">Wallet Address</label>
-                            <input type="text" name="walletAddress" id="walletAddress" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                    `;
-                    break;
-                case 'card':
-                    formTitle.textContent = 'Add Card';
-                    form.innerHTML = `
-                        <div>
-                            <label for="cardNumber" class="block text-sm font-medium text-gray-700">Card Number</label>
-                            <input type="text" name="cardNumber" id="cardNumber" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                        <div>
-                            <label for="expiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
-                            <input type="text" name="expiryDate" id="expiryDate" placeholder="MM/YY" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                        <div>
-                            <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
-                            <input type="text" name="cvv" id="cvv" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        </div>
-                    `;
-                    break;
-            }
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.add('hidden');
-        }
-
-        function submitPaymentForm(event) {
-            event.preventDefault();
-            // Here you would typically send the form data to your server
-            // For this example, we'll just show the success animation
-            closePaymentModal();
-            document.getElementById('successAnimation').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('successAnimation').classList.add('hidden');
-            }, 2000);
-        }
-
         // Initialize Lucide icons
         lucide.createIcons();
 
@@ -300,6 +414,17 @@
             menuIcon.classList.toggle('hidden');
             closeIcon.classList.toggle('hidden');
         });
+
+        function reinitializeLucideIcons() {
+            lucide.createIcons();
+        }
     </script>
+    <!-- Processing Animation -->
+<div x-show="showProcessingAnimation" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full text-center">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+        <p class="mt-2 text-lg font-semibold text-gray-700">Processing...</p>
+    </div>
+</div>
 </body>
-</html>
+</html>m

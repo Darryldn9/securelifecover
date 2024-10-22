@@ -5,8 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureLifeCover - My Policies</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body>
+<body x-data="{
+    showPaymentPopup: false,
+    showDetailsPopup: false,
+    showPaymentAnimation: false,
+    selectedPolicy: null,
+    selectedPaymentMethod: '',
+    policies: [
+        { id: 1, type: 'Family Funeral Cover', amount: 'R50/month', status: 'Paid', holder: 'Darryl Nyamayaro', parlor: 'Sunset Funeral Services', paymentDate: '2023-05-01' },
+        { id: 2, type: 'Extended Family Cover', amount: 'R30/month', status: 'Due', holder: 'Jason Joannou', parlor: 'Eternal Rest Funerals', paymentDate: '2023-06-15' },
+        { id: 3, type: 'Individual Cover', amount: 'R80/month', status: 'Late', holder: 'Siphiwe Bogatsu', parlor: 'Peaceful Passages', paymentDate: '2023-05-30' },
+        { id: 4, type: 'Family Plus Cover', amount: 'R75/month', status: 'Paid', holder: 'Donel Chihoma', parlor: 'Dignity Funeral Home', paymentDate: '2023-05-10' },
+        { id: 5, type: 'Senior Care Cover', amount: 'R150/month', status: 'Due', holder: 'Allan Davids', parlor: 'Golden Years Funerals', paymentDate: '2023-06-05' },
+        { id: 6, type: 'Child Education Cover', amount: 'R35/month', status: 'Paid', holder: 'Julian Kanjare', parlor: 'Little Angels Memorial', paymentDate: '2023-05-20' },
+    ]
+}">
     <div class="min-h-screen bg-gray-100">
         <nav class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,211 +92,88 @@
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="px-4 py-8 sm:px-0">
                         <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Family Funeral Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R500/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: John Doe</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Extended Family Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R300/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-yellow-600">Due</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: Jane Smith</p>
+                            <template x-for="policy in policies" :key="policy.id">
+                                <div class="bg-white overflow-hidden shadow rounded-lg">
+                                    <div class="p-5">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                                </svg>
+                                            </div>
+                                            <div class="ml-5 w-0 flex-1">
+                                                <dl>
+                                                    <dt class="text-sm font-medium text-gray-500 truncate" x-text="policy.type"></dt>
+                                                    <dd class="flex items-baseline">
+                                                        <div class="text-2xl font-semibold text-gray-900" x-text="policy.amount"></div>
+                                                        <div class="ml-2 text-sm font-medium" :class="{
+                                                            'text-green-600': policy.status === 'Paid',
+                                                            'text-yellow-600': policy.status === 'Due',
+                                                            'text-red-600': policy.status === 'Late'
+                                                        }" x-text="policy.status"></div>
+                                                    </dd>
+                                                </dl>
+                                                <p class="text-sm text-gray-500" x-text="'Policy Holder: ' + policy.holder"></p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
+                                    <div class="bg-gray-50 px-5 py-3 flex justify-between items-center">
+                                        <button
+                                            @click="selectedPolicy = policy; showDetailsPopup = true"
+                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                        >
+                                            View details
+                                        </button>
+                                        <template x-if="policy.status === 'Late'">
+                                            <button
+                                                @click="selectedPolicy = policy; showPaymentPopup = true"
+                                                class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Pay
+                                            </button>
+                                        </template>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Individual Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R200/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-red-600">Late</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: Mike Johnson</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"   stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Family Plus Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R750/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: Sarah Williams</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Senior Care Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R400/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-yellow-600">Due</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: Robert Brown</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="p-5">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-5 w-0 flex-1">
-                                            <dl>
-                                                <dt class="text-sm font-medium text-gray-500 truncate">Child Education Cover</dt>
-                                                <dd class="flex items-baseline">
-                                                    <div class="text-2xl font-semibold text-gray-900">R350/month</div>
-                                                    <div class="ml-2 text-sm font-medium text-green-600">Paid</div>
-                                                </dd>
-                                            </dl>
-                                            <p class="text-sm text-gray-500">Policy Holder: Emily Davis</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-5 py-3">
-                                    <div class="text-sm">
-                                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">View details</a>
-                                    </div>
-                                </div>
-                            </div>
+                            </template>
                         </div>
 
                         <div class="mt-12 bg-white shadow sm:rounded-lg">
                             <div class="px-4 py-5 sm:p-6">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Funeral Cover Policy</h3>
                                 <div class="mt-5">
-                                    <form action="/add_policy" method="POST" enctype="multipart/form-data">
+                                    <form @submit.prevent="policies.push({
+                                        id: policies.length + 1,
+                                        type: $event.target.name.value,
+                                        amount: 'R' + $event.target.payment_amount.value + '/month',
+                                        status: 'Due',
+                                        holder: 'New Policy Holder',
+                                        parlor: 'To Be Assigned',
+                                        paymentDate: $event.target.repayment_date.value
+                                    }); $event.target.reset();">
                                         <div class="grid grid-cols-6 gap-6">
-                                            <div class="col-span-6  sm:col-span-3">
-                                                <label for="policy_type" class="block text-sm font-medium text-gray-700">Policy Type</label>
-                                                <select id="policy_type" name="policy_type" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                    <option value="">Select a policy type</option>
-                                                    <option value="family">Family Funeral Cover</option>
-                                                    <option value="extended">Extended Family Cover</option>
-                                                    <option value="individual">Individual Cover</option>
-                                                    <option value="family_plus">Family Plus Cover</option>
-                                                    <option value="senior_care">Senior Care Cover</option>
-                                                    <option value="child_education">Child Education Cover</option>
-                                                </select>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                                                <input type="text"   name="name" id="name" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Please provide a name">
                                             </div>
 
                                             <div class="col-span-6 sm:col-span-3">
-                                                <label for="cover_amount" class="block text-sm font-medium text-gray-700">Cover Amount</label>
+                                                <label for="payment_amount" class="block text-sm font-medium text-gray-700">Payment Amount</label>
                                                 <div class="mt-1 relative rounded-md shadow-sm">
                                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                         <span class="text-gray-500 sm:text-sm">R</span>
                                                     </div>
-                                                    <input type="number" name="cover_amount" id="cover_amount" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" step="1000" min="5000">
+                                                    <input type="number" name="payment_amount" id="payment_amount" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="Please provide a payment amount" step="0.01" min="0">
                                                 </div>
                                             </div>
 
                                             <div class="col-span-6 sm:col-span-3">
-                                                <label for="premium" class="block text-sm font-medium text-gray-700">Monthly Premium</label>
-                                                <div class="mt-1 relative rounded-md shadow-sm">
-                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <span class="text-gray-500 sm:text-sm">R</span>
-                                                    </div>
-                                                    <input type="number" name="premium" id="premium" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" step="0.01" min="0">
-                                                </div>
+                                                <label for="repayment_date" class="block text-sm font-medium text-gray-700">Repayment Date (DD)</label>
+                                                <input type="number" name="repayment_date" id="repayment_date" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Please provide a repayment date in DD format" min="1" max="31">
                                             </div>
 
                                             <div class="col-span-6 sm:col-span-3">
-                                                <label for="beneficiaries" class="block text-sm font-medium text-gray-700">Number of Beneficiaries</label>
-                                                <input type="number" name="beneficiaries" id="beneficiaries" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" min="1">
+                                                <label for="payment_pointer" class="block text-sm font-medium text-gray-700">Payment Pointer</label>
+                                                <input type="text" name="payment_pointer" id="payment_pointer" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Please provide a payment pointer">
                                             </div>
                                         </div>
                                         <div class="mt-5">
@@ -294,7 +186,6 @@
                             </div>
                         </div>
 
-                        <!-- New section: Payment History -->
                         <div class="mt-12 bg-white shadow sm:rounded-lg">
                             <div class="px-4 py-5 sm:p-6">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">Payment History</h3>
@@ -383,6 +274,58 @@
             </main>
         </div>
     </div>
+
+    <!-- Payment Popup -->
+    <div x-show="showPaymentPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+            <h2 class="text-xl font-semibold mb-4">Make a Payment</h2>
+            <p class="mb-4" x-text="'Select a payment method for ' + (selectedPolicy ? selectedPolicy.type : '')"></p>
+            <select x-model="selectedPaymentMethod" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="">Select payment method</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="bank_transfer">Bank Transfer</option>
+            </select>
+            <div class="mt-4 flex justify-end">
+                <button @click="showPaymentPopup = false; selectedPaymentMethod = ''" class="mr-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+                <button @click="if(selectedPaymentMethod) { showPaymentAnimation = true; setTimeout(() => { showPaymentPopup = false; showPaymentAnimation = false; selectedPolicy.status = 'Paid'; selectedPaymentMethod = ''; }, 2000); }" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :disabled="!selectedPaymentMethod">
+                    Pay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Popup -->
+    <div x-show="showDetailsPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold" x-text="selectedPolicy ? selectedPolicy.type + ' Details' : ''"></h2>
+                <button @click="showDetailsPopup = false" class="text-gray-400 hover:text-gray-500">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <p><strong>Policy Holder:</strong> <span x-text="selectedPolicy ? selectedPolicy.holder : ''"></span></p>
+                <p><strong>Amount:</strong> <span x-text="selectedPolicy ? selectedPolicy.amount : ''"></span></p>
+                <p><strong>Status:</strong> <span x-text="selectedPolicy ? selectedPolicy.status : ''"></span></p>
+                <p><strong>Funeral Parlor:</strong> <span x-text="selectedPolicy ? selectedPolicy.parlor : ''"></span></p>
+                <p><strong>Next Payment Date:</strong> <span x-text="selectedPolicy ? selectedPolicy.paymentDate : ''"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Animation -->
+    <div x-show="showPaymentAnimation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
+            <p class="text-center mt-4">Processing payment...</p>
+        </div>
+    </div>
+
     <script>
         // Mobile menu toggle
         const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
