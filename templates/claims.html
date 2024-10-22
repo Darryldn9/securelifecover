@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claims - SecureLifeCover</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
-<body x-data="{
+<body class="bg-gray-100" x-data="{
     showClaimDetails: false,
     selectedClaim: null,
+    mobileMenuOpen: false,
     claims: [
         { id: 'FCC12345', type: 'Family Member Funeral', status: 'In Progress', submittedDate: '2023-05-07', policyHolder: 'John Doe', amount: 'R10,000', description: 'Claim for funeral expenses' },
         { id: 'FCC12346', type: 'Extended Family Funeral', status: 'Under Review', submittedDate: '2023-05-15', policyHolder: 'Jane Smith', amount: 'R8,000', description: 'Claim for extended family member funeral' },
@@ -20,201 +24,199 @@
     familyMembers: ['John Doe', 'Jane Doe', 'Child 1', 'Child 2'],
     funeralCoverPolicies: ['Family Funeral Cover', 'Extended Family Cover', 'Individual Cover']
 }">
-    <div class="min-h-screen bg-gray-100">
-        <nav class="bg-white shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <div class="flex-shrink-0 flex items-center">
-                            <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                            <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-gray-900">SecureLifeCover</span>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                    <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
+                    <a href="/claims" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
+                    <a href="/payments" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
+                    <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span class="sr-only">View notifications</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button" class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                            </button>
                         </div>
                     </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
-                        <a href="/items" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Policies</a>
-                        <a href="/claims" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Claims</a>
-                        <a href="/payments" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Payments</a>
-                        <a href="/familymembers" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Family Members</a>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                        <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="sr-only">View notifications</span>
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                        </button>
-                        <div class="ml-3 relative">
-                            <div>
-                                <button type="button" class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                    <span class="sr-only">Open user menu</span>
-                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="-mr-2 flex items-center sm:hidden">
-                        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
-                            <span class="sr-only">Open main menu</span>
-                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg x-show="!mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg x-show="mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-
-            <div class="sm:hidden hidden" id="mobile-menu">
-                <div class="pt-2 pb-3 space-y-1">
-                    <a href="/dashboard" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
-                    <a href="/items" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">My Policies</a>
-                    <a href="/claims" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Claims</a>
-                    <a href="/payments" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Payments</a>
-                    <a href="/familymembers" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Family Members</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="py-10">
-            <header>
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-3xl font-bold leading-tight text-gray-900">Funeral Cover Claims</h1>
-                </div>
-            </header>
-            <main>
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="px-4 py-8 sm:px-0">
-                        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-                            <div class="px-4 py-5 sm:px-6">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                    Submit a New Funeral Cover Claim
-                                </h3>
-                                <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                    Please fill out the form to submit a new funeral cover claim.
-                                </p>
-                            </div>
-                            <div class="border-t border-gray-200">
-                                <form @submit.prevent="submitClaim" class="space-y-6 px-4 py-5 sm:p-6">
-                                    <div class="grid grid-cols-6 gap-6">
-                                        <div class="col-span-6 sm:col-span-3">
-                                            <label for="family-member" class="block text-sm font-medium text-gray-700">Family Member</label>
-                                            <select id="family-member" name="family-member" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                <option value="">Select a family member</option>
-                                                <template x-for="member in familyMembers" :key="member">
-                                                    <option x-text="member"></option>
-                                                </template>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-span-6 sm:col-span-3">
-                                            <label for="funeral-cover" class="block text-sm font-medium text-gray-700">Funeral Cover Policy</label>
-                                            <select id="funeral-cover" name="funeral-cover" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                <option value="">Select a policy</option>
-                                                <template x-for="policy in funeralCoverPolicies" :key="policy">
-                                                    <option x-text="policy"></option>
-                                                </template>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-span-6">
-                                            <label for="file-upload" class="block text-sm font-medium text-gray-700">Upload Document</label>
-                                            <input id="file-upload" name="file-upload" type="file" accept="image/*,.pdf" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        </div>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Submit Claim
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="mt-8">
-                            <h2 class="text-lg leading-6 font-medium text-gray-900">Current Funeral Cover Claims</h2>
-                            <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
-                                <ul role="list" class="divide-y divide-gray-200">
-                                    <template x-for="claim in claims.filter(c => c.status === 'In Progress' || c.status === 'Under Review')" :key="claim.id">
-                                        <li>
-                                            <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
-                                                <div class="px-4 py-4 sm:px-6">
-                                                    <div class="flex items-center justify-between">
-                                                        <p class="text-sm font-medium text-indigo-600 truncate"   x-text="claim.type"></p>
-                                                        <div class="ml-2 flex-shrink-0 flex">
-                                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
-                                                                'bg-green-100 text-green-800': claim.status === 'In Progress',
-                                                                'bg-yellow-100 text-yellow-800': claim.status === 'Under Review'
-                                                            }" x-text="claim.status"></p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-2 sm:flex sm:justify-between">
-                                                        <div class="sm:flex">
-                                                            <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
-                                                        </div>
-                                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                            </svg>
-                                                            <p x-text="'Submitted on ' + claim.submittedDate"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="mt-8">
-                            <h2 class="text-lg leading-6 font-medium text-gray-900">Past Funeral Cover Claims</h2>
-                            <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
-                                <ul role="list" class="divide-y divide-gray-200">
-                                    <template x-for="claim in claims.filter(c => c.status === 'Approved' || c.status === 'Denied')" :key="claim.id">
-                                        <li>
-                                            <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
-                                                <div class="px-4 py-4 sm:px-6">
-                                                    <div class="flex items-center justify-between">
-                                                        <p class="text-sm font-medium text-indigo-600 truncate" x-text="claim.type"></p>
-                                                        <div class="ml-2 flex-shrink-0 flex">
-                                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
-                                                                'bg-green-100 text-green-800': claim.status === 'Approved',
-                                                                'bg-red-100 text-red-800': claim.status === 'Denied'
-                                                            }" x-text="claim.status"></p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-2 sm:flex sm:justify-between">
-                                                        <div class="sm:flex">
-                                                            <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
-                                                        </div>
-                                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                                            </svg>
-                                                            <p x-text="'Closed on ' + claim.submittedDate"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
+
+        <div x-show="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="/dashboard" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                <a href="/items" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">My Policies</a>
+                <a href="/claims" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Claims</a>
+                <a href="/payments" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Payments</a>
+                <a href="/familymembers" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Family Members</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="py-10">
+        <header>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight text-gray-900">Funeral Cover Claims</h1>
+            </div>
+        </header>
+        <main>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="px-4 py-8 sm:px-0">
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+                        <div class="px-4 py-5 sm:px-6">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Submit a New Funeral Cover Claim
+                            </h3>
+                            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                                Please fill out the form to submit a new funeral cover claim.
+                            </p>
+                        </div>
+                        <div class="border-t border-gray-200">
+                            <form @submit.prevent="submitClaim" class="space-y-6 px-4 py-5 sm:p-6">
+                                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                    <div>
+                                        <label for="family-member" class="block text-sm font-medium text-gray-700">Family Member</label>
+                                        <select id="family-member" name="family-member" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <option value="">Select a family member</option>
+                                            <template x-for="member in familyMembers" :key="member">
+                                                <option x-text="member"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="funeral-cover" class="block text-sm font-medium text-gray-700">Funeral Cover Policy</label>
+                                        <select id="funeral-cover" name="funeral-cover" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <option value="">Select a policy</option>
+                                            <template x-for="policy in funeralCoverPolicies" :key="policy">
+                                                <option x-text="policy"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="file-upload" class="block text-sm font-medium text-gray-700">Upload Document</label>
+                                        <input id="file-upload" name="file-upload" type="file" accept="image/*,.pdf" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    </div>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Submit Claim
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <h2 class="text-lg leading-6 font-medium text-gray-900">Current Funeral Cover Claims</h2>
+                        <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
+                            <ul role="list" class="divide-y divide-gray-200">
+                                <template x-for="claim in claims.filter(c => c.status === 'In Progress' || c.status === 'Under Review')" :key="claim.id">
+                                    <li>
+                                        <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
+                                            <div class="px-4 py-4 sm:px-6">
+                                                <div class="flex items-center justify-between">
+                                                    <p class="text-sm font-medium text-indigo-600 truncate"   x-text="claim.type"></p>
+                                                    <div class="ml-2 flex-shrink-0 flex">
+                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
+                                                            'bg-green-100 text-green-800': claim.status === 'In Progress',
+                                                            'bg-yellow-100 text-yellow-800': claim.status === 'Under Review'
+                                                        }" x-text="claim.status"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 sm:flex sm:justify-between">
+                                                    <div class="sm:flex">
+                                                        <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
+                                                    </div>
+                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        <p x-text="'Submitted on ' + claim.submittedDate"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <h2 class="text-lg leading-6 font-medium text-gray-900">Past Funeral Cover Claims</h2>
+                        <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-md">
+                            <ul role="list" class="divide-y divide-gray-200">
+                                <template x-for="claim in claims.filter(c => c.status === 'Approved' || c.status === 'Denied')" :key="claim.id">
+                                    <li>
+                                        <a @click.prevent="selectedClaim = claim; showClaimDetails = true" href="#" class="block hover:bg-gray-50">
+                                            <div class="px-4 py-4 sm:px-6">
+                                                <div class="flex items-center justify-between">
+                                                    <p class="text-sm font-medium text-indigo-600 truncate" x-text="claim.type"></p>
+                                                    <div class="ml-2 flex-shrink-0 flex">
+                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
+                                                            'bg-green-100 text-green-800': claim.status === 'Approved',
+                                                            'bg-red-100 text-red-800': claim.status === 'Denied'
+                                                        }" x-text="claim.status"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 sm:flex sm:justify-between">
+                                                    <div class="sm:flex">
+                                                        <p class="flex items-center text-sm text-gray-500" x-text="'Claim #' + claim.id"></p>
+                                                    </div>
+                                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        <p x-text="'Closed on ' + claim.submittedDate"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Claim Details Popup -->
     <div x-show="showClaimDetails" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center" x-cloak>
-        <div class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full">
+        <div class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full m-4">
             <div class="px-4 py-5 sm:p-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" x-text="selectedClaim?.type + ' Details'"></h3>
                 <dl>
@@ -260,17 +262,6 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
-            mobileMenuButton.setAttribute('aria-expanded', !expanded);
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Claim submission function
         function submitClaim() {
             this.showSubmissionAnimation = true;
             setTimeout(() => {
