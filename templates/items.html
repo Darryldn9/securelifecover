@@ -24,7 +24,34 @@
         { id: 4, type: 'Family Plus Cover', amount: 'R75/month', status: 'Paid', holder: 'Donel Chihoma', parlor: 'Dignity Funeral Home', paymentDate: '2023-05-10' },
         { id: 5, type: 'Senior Care Cover', amount: 'R150/month', status: 'Due', holder: 'Allan Davids', parlor: 'Golden Years Funerals', paymentDate: '2023-06-05' },
         { id: 6, type: 'Child Education Cover', amount: 'R35/month', status: 'Paid', holder: 'Julian Kanjare', parlor: 'Little Angels Memorial', paymentDate: '2023-05-20' },
-    ]
+    ],
+    familyMembers: ['Darryl Nyamayaro', 'Jason Joannou', 'Siphiwe Bogatsu', 'Donel Chihoma', 'Allan Davids', 'Julian Kanjare'],
+    paymentHistory: [
+        { date: '2023-05-01', policy: 'Family Funeral Cover', amount: 'R500', status: 'Paid' },
+        { date: '2023-04-01', policy: 'Extended Family Cover', amount: 'R300', status: 'Paid' },
+        { date: '2023-03-01', policy: 'Individual Cover', amount: 'R200', status: 'Late' }
+    ],
+    processPayment() {
+        if (this.selectedPaymentMethod) {
+            this.showPaymentAnimation = true;
+            setTimeout(() => {
+                this.showPaymentPopup = false;
+                this.showPaymentAnimation = false;
+                this.selectedPolicy.status = 'Paid';
+
+                // Add payment to history
+                const today = new Date().toISOString().split('T')[0];
+                this.paymentHistory.unshift({
+                    date: today,
+                    policy: this.selectedPolicy.type,
+                    amount: this.selectedPolicy.amount.replace('/month', ''),
+                    status: 'Paid'
+                });
+
+                this.selectedPaymentMethod = '';
+            }, 2000);
+        }
+    }
 }">
     <nav class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,6 +153,7 @@
                                         class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                                     >
                                         View details
+
                                     </button>
                                     <template x-if="policy.status === 'Late'">
                                         <button
@@ -149,7 +177,7 @@
                                     type: $event.target.name.value,
                                     amount: 'R' + $event.target.payment_amount.value + '/month',
                                     status: 'Due',
-                                    holder: 'New Policy Holder',
+                                    holder: $event.target.family_member.value,
                                     parlor: 'To Be Assigned',
                                     paymentDate: $event.target.repayment_date.value
                                 }); $event.target.reset();">
@@ -157,6 +185,16 @@
                                         <div>
                                             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                                             <input type="text" name="name" id="name" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Please provide a name">
+                                        </div>
+
+                                        <div>
+                                            <label for="family_member" class="block text-sm font-medium text-gray-700">Family Member</label>
+                                            <select name="family_member" id="family_member" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                <option value="">Select a family member</option>
+                                                <template x-for="member in familyMembers" :key="member">
+                                                    <option x-text="member"></option>
+                                                </template>
+                                            </select>
                                         </div>
 
                                         <div>
@@ -215,54 +253,19 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody class="bg-white divide-y divide-gray-200">
-                                                        <tr>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                2023-05-01
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                Family Funeral Cover
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                R500
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                    Paid
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                2023-04-01
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                Extended Family Cover
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                R300
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                    Paid
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                2023-03-01
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                Individual Cover
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                R200
-                                                            </td>
-                                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                                    Late
-                                                                </span>
-                                                            </td>
-                                                        </tr>
+                                                        <template x-for="payment in paymentHistory" :key="payment.date + payment.policy">
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="payment.date"></td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" x-text="payment.policy"></td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="payment.amount"></td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
+                                                                        'bg-green-100 text-green-800': payment.status === 'Paid',
+                                                                        'bg-yellow-100 text-yellow-800': payment.status === 'Late'
+                                                                    }" x-text="payment.status"></span>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -293,7 +296,7 @@
                 <button @click="showPaymentPopup = false; selectedPaymentMethod = ''" class="mr-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
                 </button>
-                <button @click="if(selectedPaymentMethod) { showPaymentAnimation = true; setTimeout(() => { showPaymentPopup = false; showPaymentAnimation = false; selectedPolicy.status = 'Paid'; selectedPaymentMethod = ''; }, 2000); }" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :disabled="!selectedPaymentMethod">
+                <button @click="processPayment()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :disabled="!selectedPaymentMethod">
                     Pay
                 </button>
             </div>
